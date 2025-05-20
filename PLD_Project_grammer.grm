@@ -1,0 +1,108 @@
+"start symbol" = <program>
+
+!---------Terminal--------
+!{AlphaNumeric}= {Letter} + {Digit}
+
+ID=  {letter}{AlphaNumeric}*        
+     
+Digit=('+'|'-')? {digit}+ ('.'{digit}+)?(('e'|('+'|'-'){digit}+) '^' ('+'|'-'){digit}+('.'{digit}+)?)?
+
+!-----------rules-------
+
+<program> ::= Start <stat_list> End
+
+<stat_list> ::= <concept> <stat_list>
+              | <empty>
+
+<concept> ::= <assign>
+            | <if>
+            | <for>
+            | <while>
+            | <match_stmt>
+            | <do_while>
+
+<assign> ::= <id> '=' <expr>
+
+<id> ::= ID
+
+<expr> ::= <expr> '+' <expr>
+        | <expr> '-' <expr>
+        | <term>
+
+<term> ::= <term> '*' <factor>
+        | <term> '/' <factor>
+        | <term> '%' <factor>
+        | <factor>
+
+<factor> ::= <factor> '**' <ex>
+          | <ex>
+
+<ex> ::= '(' <expr> ')'
+      | <id>
+      | <digit>
+
+<digit> ::= Digit 
+         
+<empty> ::=
+
+!---------------conditions----------
+
+<if> ::= 'if' <condition> ':' <stat_list>
+      | 'if' <condition> ':' <stat_list> 'else' <stat_list>
+
+<condition> ::= <expr> <op> <expr>
+
+<op> ::= '<'
+       | '>'
+       | '=='
+       | '!='
+       | '<='
+       | '>='
+
+!------------------match = switch case-----------
+
+<match_stmt> ::= 'match' <id> ':' <case_block>
+
+<case_block> ::= <case_stmt> <case_block>
+               | <default_case>   
+               
+
+<case_stmt> ::= 'case' <digit> ':' <stat_list>
+
+<default_case> ::= 'case' '_' ':' <stat_list>
+
+!----------------loops--------
+
+<for> ::= 'for' <id> 'in' <arr_item> ':' <stat_list>
+
+<arr_item> ::= <array>
+             | <id>   
+
+<array> ::= '[' <elements> ']'
+          | '[' ']'  
+
+<elements> ::= <element> ',' <elements>
+            | <element>
+
+<element> ::= <id> | <digit>
+
+!<data_type>::= int | float| double| string
+
+!------------while-------------
+
+<while> ::= 'while' <condition> ':' <stat_list>
+          | 'while' <condition> ':' <stat_list> <step>
+
+<step> ::= <id> '=' <id> '+' <digit>
+         | <id> '=' <id> '-' <digit>
+         | <id> '+=' <digit>
+         | <id> '-=' <digit>
+
+
+!-----------do while-----------
+
+<do_while> ::= 'do' ':' <stat_list> 'while' <condition>
+
+
+
+
